@@ -1,9 +1,9 @@
 CC=g++
 
-all: main
+all: main 
 
-main: snake.cpp
-	$(CC) snake.cpp -lncurses -o snake
+main: main.cpp
+	$(CC) main.cpp -lncurses -o main
 
 clean:
-	rm *snake
+	rm *main

@@ -1,17 +1,15 @@
+#ifndef FUNCTIONS_H_
+#define FUNCTIONS_H_
 #include <iostream>
 #include <ncurses.h>
 #include <cstdlib>  
 #include <unistd.h>
 #include <ctime>
-
 using namespace std;
 #define KEY_UP 0403 
 #define KEY_DOWN 0402 
 #define KEY_LEFT 0404 
 #define KEY_RIGHT 0405 
-
-// RUN FILE: make && ./main
-// cd /Users/armandoespinoza/documents/vs_code/C++/school/snake
 
 bool gameOver;
 char playAgain = 'y';
@@ -21,7 +19,6 @@ int xPos, yPos, nTail, xFruit, yFruit, score;
 enum eDirection{STOP = 0, LEFT, RIGHT, UP, DOWN};
 eDirection dir;
 int tailX[100], tailY[100];
-
 
 void Setup(){
     clear();
@@ -48,19 +45,17 @@ void Setup(){
     
 }
 
+
 void display(){
     clear();
-
-    for (int x = 0; x < width+2; x++)
-    {
-        for (int y = 0; y < height+2; y++)
-        {
-            if (x ==  0 || x == width+1)  {
+    for (int x = 0; x < width+2; x++){
+        for (int y = 0; y < height+2; y++){
+            if (x ==  0 || x == width+1) 
                 mvprintw (y, x,  "#");
-            }
-            else if (y == 0 || y == height+1){
+            
+            else if (y == 0 || y == height+1)
                 mvprintw (y, x,  "+");
-            }
+            
             else if (x == xPos && y == yPos){
                 attron(COLOR_PAIR(2));
                 mvprintw(y, x, "O");
@@ -71,26 +66,24 @@ void display(){
                 mvprintw(y, x, "@");
                 attroff(COLOR_PAIR(1));
             }
-            else
+            else{
                 for (int k = 0; k < nTail; k++){
-
                     if (tailX[k] == x  && tailY[k] == y){
                         attron(COLOR_PAIR(2));
                         mvprintw(y, x, "o");
                         attroff(COLOR_PAIR(2));
                     }
                 }
+            }
         }
-        
     }
-    
     mvprintw(height + 3, 0, "SCORE: %d", score);
     attron(A_REVERSE);
     mvprintw(height + 5, 0, "Press 'P' at anytime to PAUSE");
     mvprintw(height + 6, 0, "Press 'Q' at anytime to QUIT");
     attroff(A_REVERSE);
     
-    refresh(); // Prints or displays all
+    refresh(); // Prints/Displays all
 }
 
 void input(){
@@ -136,8 +129,8 @@ void input(){
     }
 }
 
-void logic(){
 
+void logic(){
     int prevX = tailX[0];
     int prevY = tailY[0];
     int prev2X, prev2Y;
@@ -170,8 +163,6 @@ void logic(){
         default: break;
     }
 
-
-
     if (xPos ==  0|| xPos == width+1 || yPos == 0 || yPos == height+1){
         gameOver = true;
     }
@@ -191,7 +182,6 @@ void logic(){
         nTail++;
     }
 
-    
     for (int i = 1; i < nTail; i++){ // Checks if the head touches the tail
         if (tailX[i] == xPos && tailY[i] == yPos)
         {
@@ -200,45 +190,4 @@ void logic(){
     }
 }
 
-int main(){
-    do{
-    Setup(); // INITIALIZE
-
-    while (!gameOver){ // GAME
-        display();
-        input();
-        logic();
-    }
-
-    while(!(getch()==10)){ // END SCREEN
-        clear();
-
-        attron(COLOR_PAIR(1));
-        mvprintw(height / 2 - 1, width / 2 + 8, "DEAD");
-        attroff(COLOR_PAIR(1));
-        
-        mvprintw(height / 2, width / 2, "YOUR FINAL SCORE: %d", score );
-
-        attron(A_REVERSE);
-        mvprintw(height / 2 + 3, width / 2, "PRESS ENTER TO CONTINUE");
-        attroff(A_REVERSE);
-        // refresh();
-    } 
-    
-    attron(A_REVERSE | COLOR_PAIR(3));
-    mvprintw(height / 2 + 5, width / 2, "PRESS Y TO PLAY AGAIN");
-    mvprintw(height / 2 + 6, width / 2, "PRESS N TO PLAY EXIT"); 
-    attroff(A_REVERSE | COLOR_PAIR(3));
-    cbreak();
-    while (!(playAgain = getch()) || (playAgain != 'n' && playAgain != 'y')){
-        attron(A_REVERSE | COLOR_PAIR(1));
-        mvprintw(height / 2 + 7, width / 2, "PLEASE ENTER 'Y' or 'N'");
-        attroff(A_REVERSE | COLOR_PAIR(1));
-    }
-    
-    refresh();
-    }while(playAgain=='y');
-
-    endwin();   // Ends the window
-    return 0;
-}
+#endif
